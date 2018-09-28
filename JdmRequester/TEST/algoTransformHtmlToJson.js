@@ -19,7 +19,7 @@ function loadFileAsText() {
         nodeTypes.shift()
         for(let i in nodeTypes){
             nodeTypes[i].replace(/(\r\n|\n|\r)/gm,"")
-            nodeTypes[i] +="LOL"
+            nodeTypes[i] +=""
         }
         let s = "<ul>"
         for(let i of nodeTypes){
