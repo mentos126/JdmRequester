@@ -39,7 +39,7 @@ function loadFileAsText() {
             s += "<li>" + i + "</li>"
         }
         s += "</ul>"
-        document.getElementById("node_type").innerHTML = s
+        //document.getElementById("node_type").innerHTML = s
 
         start = end
         end = "// les types de relations (Relation Types) : rt;rtid;'trname';'trgpname';'rthelp' "
@@ -59,9 +59,9 @@ function loadFileAsText() {
             s += "<li>" + i + "</li>"
         }
         s += "</ul>"
-        document.getElementById("entries").innerHTML = s
+        //document.getElementById("entries").innerHTML = s
 
-        let entriesNodeTypesRes = []
+        /*let entriesNodeTypesRes = []
         for (let entRes of entriesRes) {
             for (let r of nodeTypesRes) {
                 if (r[0] == entRes[2]) {
@@ -75,10 +75,9 @@ function loadFileAsText() {
         }
 
         entriesNodeTypesRes.sort(compareEntriesWeight)
-        console.log(entriesRes)
-        console.log(entriesNodeTypesRes)
+        console.log(entriesNodeTypesRes)*/
 
-        /*start = end
+        start = end
         end = "// les relations sortantes : r;rid;node1;node2;type;w "
         let relationTypes = code.substring(code.indexOf(start) + start.length, code.indexOf(end))
         relationTypes = relationTypes.split("rt;")
@@ -90,7 +89,7 @@ function loadFileAsText() {
         s += "</ul>" 
         document.getElementById("relation_types").innerHTML = s
 
-        start = end
+        /*start = end
         end = "// les relations entrantes : r;rid;node1;node2;type;w "
         let relOut = code.substring(code.indexOf(start) + start.length, code.indexOf(end))
         relOut = relOut.split("r;")
