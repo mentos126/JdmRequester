@@ -1,0 +1,7 @@
+// DUMP pour le terme 'chien' (eid=4455)
+// les types de noeuds (Nodes Types) : nt;ntid;'ntname'
+// les noeuds/termes (Entries) : e;eid;'name';type;w;'formated name' 
+// les types de relations (Relation Types) : rt;rtid;'trname';'trgpname';'rthelp' 
+// les relations sortantes : r;rid;node1;node2;type;w 
+// les relations entrantes : r;rid;node1;node2;type;w 
+// END

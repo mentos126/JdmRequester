@@ -18,9 +18,12 @@ function loadFileAsText() {
         nodeTypes = nodeTypes.split("nt;")
         nodeTypes.shift()
         for(let i in nodeTypes){
-            nodeTypes[i].replace(/(\r\n|\n|\r)/gm,"")
-            nodeTypes[i] +=""
+            nodeTypes[i] = nodeTypes[i].slice(0,-1)
+            if(i == nodeTypes.length-1){
+                nodeTypes[i] = nodeTypes[i].slice(0,-2)
+            }
         }
+
         let s = "<ul>"
         for(let i of nodeTypes){
             s += "<li>"+i+"</li>"
@@ -28,11 +31,17 @@ function loadFileAsText() {
         s += "</ul>" 
         document.getElementById("node_type").innerHTML = s
 
-        /*start = end
+        start = end
         end = "// les types de relations (Relation Types) : rt;rtid;'trname';'trgpname';'rthelp' "
         let entries = code.substring(code.indexOf(start) + start.length, code.indexOf(end))
         entries = entries.split("e;")
         entries.shift()
+        for(let i in entries){
+            entries[i] = entries[i].slice(0,-1)
+            if(i == entries.length-1){
+                entries[i] = entries[i].slice(0,-2)
+            }
+        }
         s = "<ul>"
         for(let i of entries){
             s += "<li>"+i+"</li>"
@@ -40,7 +49,9 @@ function loadFileAsText() {
         s += "</ul>" 
         document.getElementById("entries").innerHTML = s
 
-        start = end
+        console.log(nodeTypes)
+
+        /*start = end
         end = "// les relations sortantes : r;rid;node1;node2;type;w "
         let relationTypes = code.substring(code.indexOf(start) + start.length, code.indexOf(end))
         relationTypes = relationTypes.split("rt;")
@@ -76,7 +87,6 @@ function loadFileAsText() {
         s += "</ul>" 
         document.getElementById("rel_in").innerHTML = s*/
 
-        console.log("code",nodeTypes)
         
     }
     fileReader.readAsText(myFile, "UTF-8")
