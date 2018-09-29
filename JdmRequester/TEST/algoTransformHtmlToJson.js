@@ -1,3 +1,8 @@
+//TODO
+//avoir une liste de type de relation qui ne sontpas utilisable
+//hasher le text
+//remodulation de l'objet
+
 //label utile pour parser le code
 const labelCodeInit = "<CODE>"
 const labelCodeEnd = "</CODE>"
