@@ -246,7 +246,25 @@ function loadFileAsText() {
         }
         console.log(RESULTAT)
 
-        return RESULTAT;
+        for(let x of RESULTAT.relIn){
+            if(x.node1 == undefined || x.node1 == null){
+                conosle.log("ERRREUR", x)
+            }
+            if(x.node2 == undefined || x.node2 == null){
+                conosle.log("ERRREUR", x)
+            }
+        }
+        for(let x of RESULTAT.relOut){
+            if(x.node1 == undefined || x.node1 == null){
+                conosle.log("ERRREUR", x)
+            }
+            if(x.node2 == undefined || x.node2 == null){
+                conosle.log("ERRREUR", x)
+            }
+        }
+
+        console.log("END")
+        return RESULTAT
 
     }
     fileReader.readAsText(myFile, "UTF-8")
