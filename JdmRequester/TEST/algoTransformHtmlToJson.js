@@ -14,6 +14,7 @@ const labelRelationsType = "// les types de relations (Relation Types) : rt;rtid
 const labelRelationOut = "// les relations sortantes : r;rid;node1;node2;type;w "
 const labelRelationIn = "// les relations entrantes : r;rid;node1;node2;type;w "
 const labelEnd = "// END"
+const labelAfter = "// "
 
 //fonction de comparaison des nodes pour sort
 function compareEntriesWeight(a, b) {
@@ -45,44 +46,52 @@ function loadFileAsText() {
         text = textFromFileLoaded
 
         //TODO hash here in MD5
-        let hashedText = "MD5"
+        let hashedText = "MD5";
 
         //recupere code utilisable du text
         let code = text.substring(text.indexOf(labelCodeInit) + labelCodeInit.length, text.indexOf(labelCodeEnd))
         let copyCode = code.slice(0, code.length - 1)
 
         //recupere definition du code
-        let def = code.substring(code.indexOf(labelDefEnd) + labelDefInit.length, code.indexOf(labelDefEnd))
+        let def = code.substring(code.indexOf(labelDefInit) + labelDefInit.length, code.indexOf(labelDefEnd))
         //document.getElementById("def").innerHTML = def
 
         //decoupe le code pour en sortir une liste de type de noeud
         let start = labelTypesNode
         let end = labelEntries
-        let nodeTypes = code.substring(code.indexOf(start) + start.length, code.indexOf(end))
+        let preIndex = code.indexOf(start);
+        let searchIndex = preIndex + code.substring(preIndex + start.length).indexOf(labelAfter);
+        let nodeTypes = code.substring(code.indexOf(start) + start.length, preIndex+searchIndex)
         nodeTypes = nodeTypes.split("nt;")
         nodeTypes.shift()
         let nodeTypesRes = []
-        for (let i in nodeTypes) {
-            nodeTypes[i] = nodeTypes[i].slice(0, -1)
-            if (i == nodeTypes.length - 1) {
-                nodeTypes[i] = nodeTypes[i].slice(0, -2)
+        if(start !== -1 && searchIndex !== -1){
+            for (let i in nodeTypes) {
+                nodeTypes[i] = nodeTypes[i].slice(0, -1)
+                if (i == nodeTypes.length - 1) {
+                    nodeTypes[i] = nodeTypes[i].slice(0, -2)
+                }
+                nodeTypesRes.push(nodeTypes[i].split(";"))
             }
-            nodeTypesRes.push(nodeTypes[i].split(";"))
         }
 
         //decoupe le code pour en sortir une liste de noeuds
         start = end
         end = labelRelationsType
-        let entries = code.substring(code.indexOf(start) + start.length, code.indexOf(end))
+        preIndex = code.indexOf(start);
+        searchIndex = preIndex + code.substring(preIndex + start.length).indexOf(labelAfter);
+        let entries = code.substring(code.indexOf(start) + start.length, preIndex+searchIndex)
         entries = entries.split("e;")
         entries.shift()
         let entriesRes = []
-        for (let i in entries) {
-            entries[i] = entries[i].slice(0, -1)
-            if (i == entries.length - 1) {
-                entries[i] = entries[i].slice(0, -2)
+        if(start !== -1 && searchIndex !== -1){
+            for (let i in entries) {
+                entries[i] = entries[i].slice(0, -1)
+                if (i == entries.length - 1) {
+                    entries[i] = entries[i].slice(0, -2)
+                }
+                entriesRes.push(entries[i].split(";"))
             }
-            entriesRes.push(entries[i].split(";"))
         }
 
         //transforme la liste de noeud pour y mettre le type de noeud
@@ -99,50 +108,60 @@ function loadFileAsText() {
             }
         }
         entriesNodeTypesRes.sort(compareEntriesWeight)
-
+        
         //decoupe le code pour en recouperer le type de relations
         code = copyCode.slice(0, copyCode.length - 1)
         start = end
         end = labelRelationOut
-        let relationTypes = code.substring(code.indexOf(start) + start.length, code.indexOf(end))
+        preIndex = code.indexOf(start);
+        searchIndex = preIndex + code.substring(preIndex + start.length).indexOf(labelAfter);
+        let relationTypes = code.substring(code.indexOf(start) + start.length, preIndex+searchIndex)
         relationTypes = relationTypes.split("rt;")
         relationTypes.shift()
         let relationTypesRes = []
-        for (let i in relationTypes) {
-            relationTypes[i] = relationTypes[i].slice(0, -1)
-            if (i == relationTypes.length - 1) {
-                relationTypes[i] = relationTypes[i].slice(0, -2)
+        if(start !== -1 && searchIndex !== -1){
+            for (let i in relationTypes) {
+                relationTypes[i] = relationTypes[i].slice(0, -1)
+                if (i == relationTypes.length - 1) {
+                    relationTypes[i] = relationTypes[i].slice(0, -2)
+                }
+                relationTypesRes.push(relationTypes[i].split(";"))
             }
-            relationTypesRes.push(relationTypes[i].split(";"))
         }
 
         //decoupe le code pour en sortir une liste de relation sortante
         start = end
         end = labelRelationIn
-        let relOut = code.substring(code.indexOf(start) + start.length, code.indexOf(end))
+        preIndex = code.indexOf(start);
+        searchIndex = preIndex + code.substring(preIndex + start.length).indexOf(labelAfter);
+        let relOut = code.substring(code.indexOf(start) + start.length, searchIndex)
         relOut = relOut.split("r;")
         relOut.shift()
         let relOutRes = []
-        for (let i in relOut) {
-            relOut[i] = relOut[i].slice(0, -1)
-            if (i == relOut.length - 1) {
-                relOut[i] = relOut[i].slice(0, -2)
+        if(start !== -1 && searchIndex !== -1){
+            for (let i in relOut) {
+                relOut[i] = relOut[i].slice(0, -1)
+                if (i == relOut.length - 1) {
+                    relOut[i] = relOut[i].slice(0, -2)
+                }
+                relOutRes.push(relOut[i].split(";"))
             }
-            relOutRes.push(relOut[i].split(";"))
         }
 
         //trouve le noeud demandé
         let theNode = {}
-        for (let n of entriesNodeTypesRes) {
-            if (parseInt(n[0]) == parseInt(relOutRes[0][1])) {
-                theNode = {
-                    eid: n[0],
-                    name: n[1],
-                    ntname: n[2],
-                    w: n[3],
-                    formatedName: n[4]
+        if(relOutRes.length > 0){
+            for (let n of entriesNodeTypesRes) {
+                if (parseInt(n[0]) == parseInt(relOutRes[0][1])) {
+                    theNode = {
+                        eid: n[0],
+                        name: n[1],
+                        ntname: n[2],
+                        w: n[3],
+                        formatedName: n[4]
+                    }
+                    break
                 }
-                break
             }
         }
 
@@ -187,16 +206,37 @@ function loadFileAsText() {
         //decoupe le code pour en sortir une liste de relation entrante
         start = end
         end = labelEnd
-        let relIn = code.substring(code.indexOf(start) + start.length, code.indexOf(end))
+        preIndex = code.indexOf(start);
+        searchIndex = preIndex + code.substring(preIndex + start.length).indexOf(labelAfter);
+        let relIn = code.substring(code.indexOf(start) + start.length, searchIndex)
         relIn = relIn.split("r;")
         relIn.shift()
         let relInRes = []
-        for (let i in relIn) {
-            relIn[i] = relIn[i].slice(0, -1)
-            if (i == relIn.length - 1) {
-                relIn[i] = relIn[i].slice(0, -2)
+        if(start !== -1 && searchIndex !== -1){
+            for (let i in relIn) {
+                relIn[i] = relIn[i].slice(0, -1)
+                if (i == relIn.length - 1) {
+                    relIn[i] = relIn[i].slice(0, -2)
+                }
+                relInRes.push(relIn[i].split(";"))
             }
-            relInRes.push(relIn[i].split(";"))
+        }
+
+        //trouve le noeud demandé si pas de sortant
+        if(relInRes.length > 0){
+            theNode = {}
+            for (let n of entriesNodeTypesRes) {
+                if (parseInt(n[0]) == parseInt(relInRes[0][2])) {
+                    theNode = {
+                        eid: n[0],
+                        name: n[1],
+                        ntname: n[2],
+                        w: n[3],
+                        formatedName: n[4]
+                    }
+                    break
+                }
+            }
         }
 
         //transforme la liste de relation sortante pour y mettre le type de relation
@@ -237,33 +277,35 @@ function loadFileAsText() {
         }
         relInTypesRes.sort(compareRelationsWeight)
 
-
         let RESULTAT = {
             node: theNode,
             hashMD5: hashedText,
-            relIn:relInTypesRes,
-            relOut: relOutTypesRes
+            relIn: relInTypesRes,
+            relOut: relOutTypesRes,
+            defs: def
         }
-        console.log(RESULTAT)
 
-        for(let x of RESULTAT.relIn){
-            if(x.node1 == undefined || x.node1 == null){
-                conosle.log("ERRREUR", x)
+        for (let x of RESULTAT.relIn) {
+            if (x.node1 == undefined || x.node1 == null) {
+                RESULTAT.relIn.splice(RESULTAT.relIn.indexOf(x), 1);
             }
-            if(x.node2 == undefined || x.node2 == null){
-                conosle.log("ERRREUR", x)
+            if (x.node2 == undefined || x.node2 == null) {
+                RESULTAT.relIn.splice(RESULTAT.relIn.indexOf(x), 1);
+
             }
         }
-        for(let x of RESULTAT.relOut){
-            if(x.node1 == undefined || x.node1 == null){
-                conosle.log("ERRREUR", x)
+
+        for (let x of RESULTAT.relOut) {
+            if (x.node1 == undefined || x.node1 == null) {
+                RESULTAT.relOut.splice(RESULTAT.relOut.indexOf(x), 1);
             }
-            if(x.node2 == undefined || x.node2 == null){
-                conosle.log("ERRREUR", x)
+            if (x.node2 == undefined || x.node2 == null) {
+                RESULTAT.relOut.splice(RESULTAT.relOut.indexOf(x), 1);
             }
         }
 
         console.log("END")
+        console.log(RESULTAT)
         return RESULTAT
 
     }
